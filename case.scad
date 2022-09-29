@@ -99,6 +99,34 @@ module support_b() {
     }
 }
 
+module support_t(alpha = 0, beta = 0) {
+    h = 20;
+    difference() {
+        union() {
+            multmatrix(
+                m = [
+                    [1, 0, 0, 0],
+                    [0, 1, alpha, 0.5 * h * alpha],
+                    [0, 0, 1, 0.5 * h],
+                    [0, 0, 0, 1],
+                ]
+            ) {
+                cylinder(h = h, r = 3.5, center = true);
+                rotate([0, 0, beta]) {
+                    translate([0, 5.25, 5])
+                        cube([2, 10.5, 10], center = true);
+                    translate([5.25, 0, 5])
+                        cube([10.5, 2, 10], center = true);
+                }
+            }
+        }
+            translate([0, 0, 5])
+                cylinder(h = 20, r = 1.25, center = true);
+        union() {
+        }
+    }
+}
+
 module bottom() {
     color(c = [.3, .3, .3, 1]) {
         difference() {
@@ -164,14 +192,86 @@ module bottom() {
 module push_rod() {
     color(c = [.3, .3, .3, 1]) {
         translate([85, 0.5, 12])
-            cube([30, 3.5, 4.0]);
+            cube([24, 3.5, 4.0]);
         translate([85, 0.5, 4])
             cube([4, 3.5, 12]);
     }
 }
 
 module top() {
+    color(c = [1, 0.5, 0.3, 1]) {
+        difference() {
+            union() {
+                difference() {
+                    translate([-6.5, -2.5, -4])
+                        cube([113, 109, 24.5]);
+                    translate([-4.5, -0.5, -6])
+                        cube([109, 105, 24.5]);
+                }
+                multmatrix( m = [
+                        [sqrt(2),- 1, 0, 50],
+                        [0, 1, 0, 50],
+                        [0, 0, 1, 18.5],
+                        [0, 0, 0, 1],
+                    ]
+                ) {
+                    cube([14, 44, 4], center = true);
+                }
+            }
+            union() {
+                translate([-3, -5.5, -6])
+                    cube([106, 105, 24]);
+                multmatrix( m = [
+                        [sqrt(2),- 1, 0, 50],
+                        [0, 1, 0, 50],
+                        [0, 0, 1, 21.5],
+                        [0, 0, 0, 1],
+                    ]
+                ) {
+                    cube([2, 40, 15], center = true);
+                    translate([4, 0, 0])
+                        cube([2, 40, 15], center = true);
+                    translate([-4, 0, 0])
+                        cube([2, 40, 15], center = true);
+                }
+            translate([85, 24.8, 11.5])
+                cube([30, 4.5, 5.0]);
+            translate([85, 31.3, 11.5])
+                cube([30, 4.5, 5.0]);
+            }
+        }
+        
+        translate([86, 22.8, 16.5])
+            cube([20, 15, 4]);
+
+        translate([86, 22.8, 9.5])
+            cube([20, 2, 9]);
+        translate([86, 22.8 + 6.5, 9.5])
+            cube([20, 2, 9]);
+        translate([86, 22.8 + 13, 9.5])
+            cube([20, 2, 9]);
+        
+        translate([86, 22.8, 5.5])
+            cube([5, 2, 9]);
+        translate([86, 22.8 + 6.5, 5.5])
+            cube([5, 2, 9]);
+        translate([86, 22.8 + 13, 5.5])
+            cube([5, 2, 9]);
+
+        translate([91, 22.8, 9.5])
+            cube([15, 15, 2]);
+       
+        translate([4, 4, 0])
+            support_t(0.1, 90);
+        translate([4, 96, 0])
+            support_t(0, 90);
+        translate([96, 4, 0])
+            support_t(0.1);
+        translate([96, 96, 0])
+            support_t();    
+    }
 }
+
 
 translate([0, 24.8, 0])
     push_rod();
@@ -180,4 +280,15 @@ translate([0, 31.3, 0])
     push_rod();
 
 platina();
+translate([0, 0.01, 0]) {
 bottom();
+}
+top();
+
+rotate([180, 0, 0]) {
+    // top();
+}
+
+rotate([90, 0, 0]) {
+    // push_rod();
+}
